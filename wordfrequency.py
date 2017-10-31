@@ -35,14 +35,16 @@ with open('C:/data/noteevents/noteevents_b.csv', 'r') as sourcefile:
 with open('C:/data/f_pats.csv', 'r') as demogsfile:
     female = demogsfile.readlines()
 
-k = 0
-for line in df.loc[(df['subject_id'].isin(female)) & (df['category'] == 'Nursing/other')]["text"]:
+docs = df.loc[(df['subject_id'].isin(female)) & (df['category'] == 'Nursing/other')]["text"]
+
+doccount = docs.shape[0]
+
+for line in docs:
     count =+ 1
     lineconv.append(word_tokenize(line))
     if count > 5000:
         break
 
-doccount = df.loc[(df['subject_id'].isin(female)) & (df['category'] == 'Nursing/other')]["text"].shape[0]
 
 for words in lineconv:
     cleanedwords.append([s.translate(punctuation) for s in words])
