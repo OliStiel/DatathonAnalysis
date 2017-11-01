@@ -6,7 +6,6 @@ import string
 import seaborn as sns
 from stop_words import get_stop_words
 
-
 def numberCheck(num):
     try:
         float(num)
@@ -22,8 +21,6 @@ def countAndOrder(wordlist,countlist,headNum):
 
 punctuation = str.maketrans('','', string.punctuation)
 
-head = []
-headtoken = []
 stemmed = []
 lineconv = []
 cleanedwords = []
@@ -39,12 +36,13 @@ docs = df.loc[(df['subject_id'].isin(female)) & (df['category'] == 'Nursing/othe
 
 doccount = docs.shape[0]
 
+count = 0
+
 for line in docs:
-    count =+ 1
+    count += 1
     lineconv.append(word_tokenize(line))
     if count > 5000:
         break
-
 
 for words in lineconv:
     cleanedwords.append([s.translate(punctuation) for s in words])
@@ -55,7 +53,7 @@ cleanedwords = [word for word in cleanedwords if word != '' and numberCheck(word
 ps = PorterStemmer()
 
 for word in cleanedwords:
-        stemmed.append(ps.stem(word))
+        stemmed.append(ps.stem(word.lower()))
 
 stemmedcount = dict(Counter(stemmed))
 orderedcount = OrderedDict(sorted(stemmedcount.items()))
@@ -69,5 +67,5 @@ grouped10 = countAndOrder(wordlist, countlist, 100)
 # sns.plt.plot()
 # sns.plt.show()
 
-for i,m in grouped10.values:
-    print(i/doccount,m,i)
+for i, m in grouped10.values:
+    print(i/doccount, m, i)
