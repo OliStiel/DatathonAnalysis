@@ -6,6 +6,7 @@ import string
 import seaborn as sns
 from stop_words import get_stop_words
 
+# for removing numbers
 def numberCheck(num):
     try:
         float(num)
