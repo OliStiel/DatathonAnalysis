@@ -33,23 +33,23 @@ with open('C:/data/noteevents/noteevents_b.csv', 'r') as sourcefile:
 with open('C:/data/f_pats.csv', 'r') as demogsfile:
     female = demogsfile.readlines()
 
-docs = df.loc[(df['subject_id'].isin(female)) & (df['category'] == 'Nursing/other')]["text"]
-
-doccount = docs.shape[0]
+docs = df.loc[~(df['subject_id'].isin(female)) & (df['category'] == 'Nursing/other')]["text"]
 
 count = 0
 
 for line in docs:
     count += 1
     lineconv.append(word_tokenize(line))
-    if count > 5000:
-        break
+    #if count > 10000:
+    #    break
 
 for words in lineconv:
     cleanedwords.append([s.translate(punctuation) for s in words])
 
 cleanedwords = [word for sublist in cleanedwords for word in sublist]
-cleanedwords = [word for word in cleanedwords if word != '' and numberCheck(word) == False and word not in stop_words and len(word)>1]
+cleanedwords = ([word for word in cleanedwords if word != '' and
+                 numberCheck(word) == False and
+                 word not in stop_words and len(word)>1])
 
 ps = PorterStemmer()
 
@@ -57,6 +57,7 @@ for word in cleanedwords:
         stemmed.append(ps.stem(word.lower()))
 
 stemmedcount = dict(Counter(stemmed))
+
 orderedcount = OrderedDict(sorted(stemmedcount.items()))
 
 wordlist = list(orderedcount.keys())
@@ -68,5 +69,7 @@ grouped10 = countAndOrder(wordlist, countlist, 100)
 # sns.plt.plot()
 # sns.plt.show()
 
+print(count)
+
 for i, m in grouped10.values:
-    print(i/doccount, m, i)
+    print(i/count, m, i)
